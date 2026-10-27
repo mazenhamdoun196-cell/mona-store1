@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skin & Hair Care - Mona Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #c5a880;
+            --bg-color: #ffffff;
+            --text-color: #2b2d42;
+            --border-color: #f1ede7;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        .back-nav {
+            max-width: 1200px;
+            margin: 20px auto 10px auto;
+            padding: 0 20px;
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 700;
+            font-size: 15px;
+            transition: color 0.2s;
+        }
+
+        .btn-back:hover {
+            color: var(--primary-color);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px 20px 80px 20px;
+            text-align: center;
+        }
+
+        .page-header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+
+        @media (min-width: 600px) {
+            .categories-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .sub-card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            text-decoration: none;
+            color: var(--text-color);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sub-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .sub-card-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            background-color: #f9f9f9;
+        }
+
+        .sub-card-title {
+            padding: 18px;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="back-nav">
+        <a href="index.html" class="btn-back">
+            <i class="fa-solid fa-arrow-right"></i> العودة للرئيسية
+        </a>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Skin Care & Hair Care</h1>
+        </div>
+
+        <div class="categories-grid">
+            <!-- قسم العناية بالبشرة -->
+            <a href="skincare.html" class="sub-card">
+                <img src="skin_banner.jpg" alt="Skin Care" class="sub-card-img" onerror="this.onerror=null; this.src='images/placeholder.jpg';">
+                <div class="sub-card-title">Skin Care (العناية بالبشرة)</div>
+            </a>
+
+            <!-- قسم العناية بالشعر -->
+            <a href="haircare.html" class="sub-card">
+                <img src="hair_banner.jpg" alt="Hair Care" class="sub-card-img" onerror="this.onerror=null; this.src='images/placeholder.jpg';">
+                <div class="sub-card-title">Hair Care (العناية بالشعر)</div>
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>

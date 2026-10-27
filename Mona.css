@@ -1,0 +1,210 @@
+/* ضبط الهوامش الأساسية للمتصفح */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #ffffff; 
+    color: #222222;
+    margin: 0;
+    padding: 0;
+    display: block;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* تنسيق الهيدر العلوي */
+header {
+    text-align: center;
+    padding: 50px 20px 20px 20px;
+    position: relative;
+    z-index: 2;
+}
+
+.store-title {
+    font-family: 'Alex Brush', cursive;
+    font-size: 65px; 
+    font-weight: 400;
+    margin: 0 0 5px 0;
+    color: #111111;
+}
+
+.categories-sub {
+    font-size: 14px;
+    color: #777777;
+    margin: 0 0 8px 0;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.welcome-text {
+    font-size: 18px;
+    color: #444444;
+    margin: 0 0 5px 0;
+}
+
+.slogan {
+    font-size: 14px;
+    font-style: italic;
+    color: #aa8453; 
+    margin: 5px 0 0 0;
+    font-weight: 500;
+}
+
+/* حاوية البوابات */
+.gates-container {
+    display: block;
+    text-align: center;
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0 20px;
+    position: relative;
+    z-index: 2;
+}
+
+.gates-row {
+    display: block;
+    text-align: center;
+}
+
+/* كروت البوابات العادية (الصف الأول) */
+.gate-card {
+    display: inline-block;
+    vertical-align: top;
+    width: 320px;
+    margin: 15px;
+    text-decoration: none;
+    color: inherit;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.gate-card:hover {
+    transform: translateY(-5px);
+}
+
+.image-wrapper {
+    width: 100%;
+    height: 380px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); 
+    background-color: #f9f9f9;
+}
+
+.image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ---------------------------------------------------- */
+/* تنسيق البوابة الثالثة المستطيلة العريضة (Korean products) */
+.gates-row-full {
+    display: block;
+    margin-top: 15px;
+    text-align: center;
+}
+
+.gate-card-wide {
+    display: inline-block;
+    width: 670px; /* يغطي مساحة البوابتين الفوقيتين معاً ليتناسق الشكل */
+    margin: 15px;
+    text-decoration: none;
+    color: inherit;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.gate-card-wide:hover {
+    transform: translateY(-5px);
+}
+
+/* حاوية الصورة المستطيلة العريضة */
+.image-wrapper-wide {
+    width: 100%;
+    height: 240px; /* ارتفاع أقل ليعطي شكل مستطيل عريض سينمائي */
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    background-color: #f9f9f9;
+}
+
+.image-wrapper-wide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+/* ---------------------------------------------------- */
+
+.gate-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 15px 0 0 0;
+    color: #222222;
+    transition: color 0.3s;
+}
+
+.gate-card:hover .gate-title, 
+.gate-card-wide:hover .gate-title {
+    color: #aa8453;
+}
+
+/* الفوتر وتنسيق عناصر الواتساب والدعاء */
+footer {
+    text-align: center;
+    padding: 40px 20px 30px 20px;
+    margin-top: 40px;
+    position: relative;
+    z-index: 2;
+}
+
+.whatsapp-contact {
+    margin-bottom: 30px;
+}
+
+.contact-title {
+    font-size: 15px;
+    color: #555555;
+    margin: 0 0 12px 0;
+    font-weight: 600;
+}
+
+.whatsapp-icon {
+    width: 50px;
+    height: 50px;
+    transition: transform 0.3s ease, filter 0.3s ease;
+    cursor: pointer;
+}
+
+.whatsapp-icon:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(0 4px 8px rgba(37, 211, 102, 0.3));
+}
+
+.prayer-text {
+    font-size: 13px;
+    color: #888888;
+    margin: 0;
+    border-top: 1px solid #eeeeee;
+    padding-top: 20px;
+    display: inline-block;
+    max-width: 400px;
+}
+
+/* التجاوب التام مع شاشات الموبايل ليتحول المستطيل لعادي تلقائياً بشكل مناسب للشاشات الصغيرة */
+@media (max-width: 720px) {
+    .gate-card, .gate-card-wide {
+        display: block;
+        width: 100%;
+        max-width: 340px;
+        margin: 30px auto;
+    }
+    .image-wrapper-wide {
+        height: 380px; /* يتحول لمربع متناسق على الموبايل لكي لا تضغط الصورة */
+    }
+    .store-title {
+        font-size: 55px;
+    }
+}

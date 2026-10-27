@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mona-store Control Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #c5a880; /* ذهبي هادئ وراقي */
+            --primary-hover: #b0926a;
+            --bg-color: #f8f9fa; /* خلفية فاتحة ونظيفة */
+            --card-bg: #ffffff; /* كروت بيضاء مريحة */
+            --text-color: #2b2d42; /* نص داكن هادئ */
+            --text-muted: #8d99ae;
+            --border-color: #e2e8f0;
+            --input-bg: #f8f9fa;
+            --danger-color: #d90429;
+            --success-color: #2b9348;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px 10px;
+            direction: ltr;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 25px;
+        }
+
+        h1 span {
+            color: var(--primary-color);
+        }
+
+        /* شريط البحث */
+        .search-container {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 12px 12px 12px 40px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-color);
+            font-size: 15px;
+            font-weight: 600;
+            box-sizing: border-box;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            transition: all 0.3s ease;
+        }
+
+        .search-container input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(197, 168, 128, 0.15);
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+
+        /* أزرار الفلترة وزر التحديث */
+        .action-bar {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        /* جعل الفلاتر مريحة للموبايل وتلتف بشكل صحيح */
+        .filter-buttons {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn-filter {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 11px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+        }
+
+        .btn-filter.active, .btn-filter:hover {
+            background-color: var(--text-color);
+            color: #ffffff;
+            border-color: var(--text-color);
+        }
+
+        .btn-update {
+            background-color: var(--success-color);
+            color: #ffffff;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%; /* زر التحديث بعرض الشاشة لسهولة الضغط */
+            transition: all 0.2s ease;
+        }
+
+        .btn-update:hover {
+            background-color: #207237;
+        }
+
+        /* الأقسام والفواصل */
+        .dept-section {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text-color);
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--primary-color);
+            letter-spacing: 0.5px;
+        }
+
+        /* كروت المنتجات */
+        .product-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* الهيكل الجديد بناء على فكرتك الذكية */
+        .product-row {
+            display: flex;
+            flex-direction: column; /* جعل العناصر تحت بعض */
+            gap: 10px;
+            background-color: var(--input-bg);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* تصميم مربع الاسم الممتد والديناميكي */
+        .name-wrapper {
+            width: 100%;
+        }
+
+        .input-name {
+            width: 100%;
+            background-color: #ffffff;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: 600;
+            font-size: 14px;
+            outline: none;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+
+        .input-name:focus {
+            border-color: var(--primary-color);
+        }
+
+        /* السطر الثاني للبيانات (السعر والكمية والحذف) */
+        .details-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .input-price, .input-qty {
+            background-color: #ffffff;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: 600;
+            font-size: 14px;
+            outline: none;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+
+        .input-price:focus, .input-qty:focus {
+            border-color: var(--primary-color);
+        }
+
+        .input-price {
+    width: 120px;
+    text-align: center;
+}
+
+        .input-qty {
+    width: 80px;
+    text-align: center;
+}
+
+        /* زرار الحذف بتصميم متناسق في السطر الثاني */
+        .btn-delete {
+            background-color: rgba(217, 4, 41, 0.1);
+            border: 1px solid rgba(217, 4, 41, 0.2);
+            color: var(--danger-color);
+            font-size: 16px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .btn-delete:hover {
+            background-color: var(--danger-color);
+            color: #ffffff;
+        }
+
+        .btn-add-more {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 1px dashed var(--primary-color);
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            text-transform: uppercase;
+            width: 100%;
+            margin-top: 15px;
+            transition: all 0.2s;
+        }
+
+        .btn-add-more:hover {
+            background-color: rgba(197, 168, 128, 0.05);
+            border-style: solid;
+        }
+
+        /* تعديلات الميديا للشاشات الأكبر قليلاً */
+        @media(min-width: 600px) {
+            .action-bar {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .btn-update {
+                width: auto;
+            }
+            .filter-buttons {
+                justify-content: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>mona-store <span>Control Panel</span></h1>
+
+    <div class="search-container">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="search-input" placeholder="Search products by name...">
+    </div>
+
+    <div class="action-bar">
+        <div class="filter-buttons">
+            <button class="btn-filter active" data-filter="all">All</button>
+            <button class="btn-filter" data-filter="perfumes">Perfumes</button>
+            <button class="btn-filter" data-filter="skin-care">Skin Care</button>
+            <button class="btn-filter" data-filter="hair-care">Hair Care</button>
+            <button class="btn-filter" data-filter="korean-prod">Korean</button>
+        </div>
+        <button id="update-btn" class="btn-update">تحديث</button>
+    </div>
+
+    <div id="departments-container">
+        <div class="dept-section" id="section-perfumes" data-category="perfumes">
+            <div class="section-title">Perfumes</div>
+            <div class="product-list" id="list-perfumes"></div>
+            <button class="btn-add-more" onclick="addNewProductRow('perfumes')">Add Product</button>
+        </div>
+
+        <div class="dept-section" id="section-skin-care" data-category="skin-care">
+            <div class="section-title">Skin Care</div>
+            <div class="product-list" id="list-skin-care"></div>
+            <button class="btn-add-more" onclick="addNewProductRow('skin-care')">Add Product</button>
+        </div>
+
+        <div class="dept-section" id="section-hair-care" data-category="hair-care">
+            <div class="section-title">Hair Care</div>
+            <div class="product-list" id="list-hair-care"></div>
+            <button class="btn-add-more" onclick="addNewProductRow('hair-care')">Add Product</button>
+        </div>
+
+        <div class="dept-section" id="section-korean-prod" data-category="korean-prod">
+            <div class="section-title">Korean Products</div>
+            <div class="product-list" id="list-korean-prod"></div>
+            <button class="btn-add-more" onclick="addNewProductRow('korean-prod')">Add Product</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<script>
+  // إعدادات قاعدة بيانات mona-store
+  const firebaseConfig = {
+    apiKey: "AIzaSyDSDPiVh9SeKelRuITttm3EQO5xhSJFVK0",
+    authDomain: "mona-store-7c476.firebaseapp.com",
+    projectId: "mona-store-7c476",
+    storageBucket: "mona-store-7c476.firebasestorage.app",
+    messagingSenderId: "1017880206778",
+    appId: "1:1017880206778:web:9c72e613c71130611a9183",
+    databaseURL: "https://mona-store-7c476-default-rtdb.firebaseio.com/"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const database = firebase.database();
+
+  const updateBtn = document.getElementById('update-btn');
+  const searchInput = document.getElementById('search-input');
+  const filterBtns = document.querySelectorAll('.btn-filter');
+  const deptSections = document.querySelectorAll('.dept-section');
+
+  let dbProducts = {
+      "perfumes": {},
+      "skin-care": {},
+      "hair-care": {},
+      "korean-prod": {}
+  };
+
+  // جلب البيانات
+  database.ref('products').once('value', (snapshot) => {
+      if (snapshot.exists()) {
+          const data = snapshot.val();
+          dbProducts = {
+              "perfumes": data["perfumes"] || {},
+              "skin-care": data["skin-care"] || {},
+              "hair-care": data["hair-care"] || {},
+              "korean-prod": data["korean-prod"] || {}
+          };
+      }
+      renderAllSections();
+  });
+
+  function renderAllSections() {
+      const categories = ["perfumes", "skin-care", "hair-care", "korean-prod"];
+      categories.forEach(cat => {
+          const listContainer = document.getElementById(`list-${cat}`);
+          listContainer.innerHTML = '';
+          const items = dbProducts[cat];
+          
+          let hasItems = false;
+          for (let key in items) {
+              hasItems = true;
+              createProductRow(cat, key, items[key].name, items[key].price, items[key].qty);
+          }
+          
+          if (!hasItems) {
+              createProductRow(cat, 'temp-' + Date.now(), '', '', '');
+          }
+      });
+      applyFilterAndSearch();
+  }
+
+  // إنشاء هيكل المنتج الجديد بالفكرة العبقرية
+  function createProductRow(category, id, name = '', price = '', qty = '') {
+      const container = document.getElementById(`list-${category}`);
+      const row = document.createElement('div');
+      row.className = 'product-row';
+      row.dataset.id = id;
+      row.dataset.category = category;
+
+      row.innerHTML = `
+          <div class="name-wrapper">
+              <input type="text" class="input-name" value="${name}" placeholder="Product Name">
+          </div>
+          <div class="details-wrapper">
+              <input type="number" class="input-price" value="${price}" placeholder="Price (EGP)">
+              <input type="number" class="input-qty" value="${qty}" placeholder="Qty">
+              <button class="btn-delete" onclick="removeProductRow(this)" title="Delete">
+                  <i class="fa-solid fa-trash-can"></i>
+              </button>
+          </div>
+      `;
+      container.appendChild(row);
+  }
+
+  window.addNewProductRow = function(category) {
+      createProductRow(category, 'new-' + Date.now());
+      applyFilterAndSearch();
+  };
+
+  window.removeProductRow = function(button) {
+      const row = button.closest('.product-row');
+      row.remove();
+  };
+
+  // زر التحديث
+  updateBtn.addEventListener('click', () => {
+      const updatedData = {
+          "perfumes": {},
+          "skin-care": {},
+          "hair-care": {},
+          "korean-prod": {}
+      };
+
+      const allRows = document.querySelectorAll('.product-row');
+      let validationError = false;
+
+      allRows.forEach(row => {
+          const category = row.dataset.category;
+          const nameInput = row.querySelector('.input-name').value.trim();
+          const priceInput = row.querySelector('.input-price').value.trim();
+          const qtyInput = row.querySelector('.input-qty').value.trim();
+
+          if (nameInput || priceInput || qtyInput) {
+              if (!nameInput || !priceInput || !qtyInput) {
+                  validationError = true;
+                  row.style.border = "1px solid var(--danger-color)";
+              } else {
+                  row.style.border = "1px solid var(--border-color)";
+                  const id = row.dataset.id.startsWith('new-') || row.dataset.id.startsWith('temp-') ? database.ref().push().key : row.dataset.id;
+                  updatedData[category][id] = {
+                      name: nameInput,
+                      price: parseFloat(priceInput),
+                      qty: parseInt(qtyInput),
+                      category: category
+                  };
+              }
+          }
+      });
+
+      if (validationError) {
+          alert("Please fill all fields (Name, Price, and Qty) for the products you've edited!");
+          return;
+      }
+
+      database.ref('products').set(updatedData)
+          .then(() => {
+              alert("تم تحديث البيانات بنجاح!");
+              dbProducts = updatedData;
+              renderAllSections();
+          })
+          .catch(err => {
+              alert("Error during update: " + err.message);
+          });
+  });
+
+  function applyFilterAndSearch() {
+      const activeFilter = document.querySelector('.btn-filter.active').dataset.filter;
+      const query = searchInput.value.toLowerCase().trim();
+
+      deptSections.forEach(section => {
+          const category = section.dataset.category;
+          const rows = section.querySelectorAll('.product-row');
+          let visibleRowsInSection = 0;
+
+          const isCategoryVisible = (activeFilter === 'all' || activeFilter === category);
+
+          rows.forEach(row => {
+              const name = row.querySelector('.input-name').value.toLowerCase();
+              const matchesSearch = name.includes(query);
+
+              if (isCategoryVisible && matchesSearch) {
+                  row.style.display = 'flex';
+                  visibleRowsInSection++;
+              } else {
+                  row.style.display = 'none';
+              }
+          });
+
+          if (isCategoryVisible && (visibleRowsInSection > 0 || query === '')) {
+              section.style.display = 'block';
+          } else {
+              section.style.display = 'none';
+          }
+      });
+  }
+
+  searchInput.addEventListener('input', applyFilterAndSearch);
+
+  filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+          filterBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          applyFilterAndSearch();
+      });
+  });
+</script>
+</body>
+</html>

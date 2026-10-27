@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfumes - Mona Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #c5a880; /* Elegant gold */
+            --primary-dark: #b0926a;
+            --bg-color: #ffffff;
+            --card-bg: #ffffff;
+            --text-color: #2b2d42;
+            --text-muted: #8d99ae;
+            --border-color: #f1ede7;
+            --danger-color: #d90429; /* لون أحمر لشريط Sold Out */
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: block;
+        }
+
+        .back-nav {
+            max-width: 1200px;
+            margin: 20px auto 10px auto;
+            padding: 0 15px;
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 700;
+            font-size: 15px;
+            transition: color 0.2s;
+        }
+
+        .btn-back:hover {
+            color: var(--primary-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px 100px 15px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            font-family: 'Playfair Display', 'Georgia', serif;
+            font-size: 38px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-color);
+            margin: 10px 0;
+            display: inline-block;
+        }
+
+        .page-header h1 span {
+            color: var(--primary-color);
+        }
+
+        .page-header p {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin: 5px 0 0 0;
+            letter-spacing: 1px;
+        }
+
+        /* شريط البحث */
+        .search-container {
+            margin: 0 auto 30px auto;
+            position: relative;
+            max-width: 500px;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 12px 40px 12px 12px;
+            background-color: #f8f9fa;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-color);
+            font-size: 15px;
+            font-weight: 600;
+            box-sizing: border-box;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            transition: all 0.3s ease;
+        }
+
+        .search-container input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(197, 168, 128, 0.15);
+        }
+
+        .search-container i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+
+        /* Products Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        @media (min-width: 768px) {
+            .products-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 25px;
+            }
+        }
+
+        /* Product Card */
+        .product-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .image-container {
+            width: 100%;
+            padding-top: 100%;
+            position: relative;
+            background-color: #f9f9f9;
+        }
+
+        .image-container img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* تصميم Sold Out الجديد (شريط أحمر في المنتصف) */
+        .sold-out-badge {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            transform: translateY(-50%);
+            background-color: var(--danger-color);
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 800;
+            padding: 10px 0;
+            text-align: center;
+            text-transform: uppercase;
+            z-index: 2;
+            display: none; /* يتم إظهارها بواسطة الجافاسكريبت */
+            letter-spacing: 1px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        .product-info {
+            padding: 12px 8px;
+            text-align: center;
+        }
+
+        .product-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin: 0;
+            color: var(--text-color);
+            min-height: 20px;
+            word-wrap: break-word;
+        }
+
+        /* Bottom Sheet Pop-up styling */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 999;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .popup-sheet {
+            position: fixed;
+            bottom: -100%;
+            left: 0;
+            width: 100%;
+            height: 50vh;
+            background-color: #ffffff;
+            border-top-left-radius: 24px;
+            border-top-right-radius: 24px;
+            z-index: 1000;
+            box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.15);
+            transition: bottom 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .popup-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .popup-sheet.active {
+            bottom: 0;
+        }
+
+        .popup-drag-handle {
+            width: 40px;
+            height: 5px;
+            background-color: #e0e0e0;
+            border-radius: 3px;
+            margin: -10px auto 15px auto;
+        }
+
+        .popup-content {
+            flex-grow: 1;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .popup-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+
+        .popup-details {
+            margin-bottom: 20px;
+        }
+
+        .popup-price {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+
+        .popup-qty {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .popup-qty.sold-out-text {
+            color: var(--danger-color);
+            font-weight: bold;
+        }
+
+        .btn-order-whatsapp {
+            background-color: #25d366;
+            color: #ffffff;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+
+        .btn-order-whatsapp:hover {
+            background-color: #20ba5a;
+        }
+
+        .close-popup {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="back-nav">
+        <a href="index.html" class="btn-back">
+            <i class="fa-solid fa-arrow-right"></i> العودة للرئيسية
+        </a>
+    </div>
+
+    <div class="container">
+        <header class="page-header">
+            <h1><span>Mona</span> Perfumes</h1>
+            <p>ELEGANT PERFUME COLLECTION</p>
+        </header>
+
+        <!-- شريط البحث -->
+        <div class="search-container">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="search-input" placeholder="ابحث عن اسم العطر...">
+        </div>
+
+        <div id="products-grid" class="products-grid"></div>
+    </div>
+
+    <div class="popup-overlay" id="popup-overlay" onclick="closePopup()"></div>
+    <div class="popup-sheet" id="popup-sheet">
+        <div class="popup-drag-handle"></div>
+        <button class="close-popup" onclick="closePopup()"><i class="fa-solid fa-xmark"></i></button>
+        <div class="popup-content">
+            <div class="popup-title" id="pop-title">-</div>
+            <div class="popup-details">
+                <div class="popup-price" id="pop-price">-</div>
+                <div class="popup-qty" id="pop-qty">-</div>
+            </div>
+            <a href="#" id="pop-order-btn" class="btn-order-whatsapp" target="_blank">
+                <i class="fa-brands fa-whatsapp"></i> اطلب الآن
+            </a>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <script>
+        // إعدادات قاعدة بيانات mona-store
+        const firebaseConfig = {
+            apiKey: "AIzaSyDSDPiVh9SeKelRuITttm3EQO5xhSJFVK0",
+            authDomain: "mona-store-7c476.firebaseapp.com",
+            projectId: "mona-store-7c476",
+            storageBucket: "mona-store-7c476.firebasestorage.app",
+            messagingSenderId: "1017880206778",
+            appId: "1:1017880206778:web:9c72e613c71130611a9183",
+            databaseURL: "https://mona-store-7c476-default-rtdb.firebaseio.com/"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        const grid = document.getElementById('products-grid');
+        const searchInput = document.getElementById('search-input');
+        
+        let allProducts = []; // مصفوفة لتخزين المنتجات للبحث السريع
+
+        // سحب البيانات ديناميكياً من الفايربيس (قسم العطور)
+        database.ref('products/perfumes').on('value', (snapshot) => {
+            allProducts = []; // تفريغ القائمة القديمة
+            
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                
+                for (let key in data) {
+                    const prod = data[key];
+                    if (prod.name && prod.name.trim() !== '') {
+                        allProducts.push({
+                            name: prod.name.trim(),
+                            price: prod.price || '',
+                            qty: prod.qty !== undefined ? parseInt(prod.qty) : 1
+                        });
+                    }
+                }
+                // عرض كل المنتجات بعد جلبها
+                renderProducts(allProducts);
+            } else {
+                grid.innerHTML = '<p style="text-align:center; width:100%; grid-column: 1 / -1; color: var(--text-muted); font-weight: bold;">لا توجد منتجات حالياً في قسم العطور.</p>';
+            }
+        });
+
+        // دالة لرسم المنتجات في الصفحة
+        function renderProducts(productsToRender) {
+            grid.innerHTML = ''; // مسح القديم
+            
+            if(productsToRender.length === 0) {
+                 grid.innerHTML = '<p style="text-align:center; width:100%; grid-column: 1 / -1; color: var(--text-muted);">لم يتم العثور على منتجات مطابقة للبحث.</p>';
+                 return;
+            }
+
+            productsToRender.forEach(prod => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                // نمرر كائن المنتج كله للنافذة
+                card.onclick = () => openPopup(prod);
+
+                const isSoldOut = prod.qty === 0;
+
+                card.innerHTML = `
+                    <div class="image-container">
+                        <span class="sold-out-badge" style="display: ${isSoldOut ? 'block' : 'none'}">Sold Out</span>
+                        <img src="images/${prod.name}.jpg" alt="${prod.name}" 
+                             onerror="this.onerror=null; this.src='images/placeholder.jpg';">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">${prod.name}</h3>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // تشغيل البحث بمجرد الكتابة
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            // فلترة المنتجات التي تحتوي على الكلمة المكتوبة
+            const filteredProducts = allProducts.filter(p => p.name.toLowerCase().includes(query));
+            renderProducts(filteredProducts);
+        });
+
+        // فتح نافذة الطلب وتجهيز رابط واتساب
+        function openPopup(prod) {
+            const overlay = document.getElementById('popup-overlay');
+            const sheet = document.getElementById('popup-sheet');
+
+            const popTitle = document.getElementById('pop-title');
+            const popPrice = document.getElementById('pop-price');
+            const popQty = document.getElementById('pop-qty');
+            const orderBtn = document.getElementById('pop-order-btn');
+
+            popTitle.innerText = prod.name;
+            popPrice.innerText = prod.price ? `${prod.price} EGP` : 'السعر غير متوفر';
+            
+            if (prod.qty === 0) {
+                popQty.innerText = 'نفذت الكمية (Sold Out)';
+                popQty.className = 'popup-qty sold-out-text';
+                orderBtn.style.display = 'none'; // يمكنك إخفاءه بـ 'none' لو مش عاوز حد يطلب منتج خلصان
+            } else {
+                popQty.innerText = `الكمية المتاحة: ${prod.qty}`;
+                popQty.className = 'popup-qty';
+                orderBtn.style.display = 'flex';
+            }
+
+            // رقم الواتساب الخاص بك
+            const phoneNumber = "201147720724";
+            
+            // رسالة واضحة للواتساب
+            const textMessage = `أهلاً Mona Store، أود طلب عطر: ${prod.name} | السعر: ${prod.price || 'غير محدد'} EGP`;
+            const encodedMessage = encodeURIComponent(textMessage);
+            
+            orderBtn.href = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+
+            overlay.classList.add('active');
+            sheet.classList.add('active');
+        }
+
+        function closePopup() {
+            document.getElementById('popup-overlay').classList.remove('active');
+            document.getElementById('popup-sheet').classList.remove('active');
+        }
+    </script>
+</body>
+</html>
